@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+   	<style type="text/css">
+   		h4{
+			height: 60px;
+   			line-height: 60px;
+   			text-align: center;
+        	background-color: #95B8E7;
+        	margin-bottom: 40px;
+		}
+		#main{
+			margin-top: 20px;
+		}
+		#main table tr{
+			display: block;
+			margin-top: 10px;
+		}
+		#main table td>input,select{
+			border: 1px solid #95B8E7;
+			width: 200px;
+			height: 30px;
+			border-radius: 5px;
+		}
+		#main textarea{
+			border: 1px solid #95B8E7;
+			border-radius: 5px;
+		}
+		#main .date{
+			border: none;
+		}
+/*		#main .sex{
+			vertical-align: middle;
+			height: 20px;
+			width: 78px;
+		}*/
+		.td1{
+			width: 100px;
+			padding-left: 100px
+		}
+		#end input{
+			border-radius: 5px;
+    		border: 1px solid #E0ECFF;
+    		background-color:  #95B8E7;
+    		color: white;
+			width: 70px;
+			height: 30px;
+			margin-top: 30px;
+			margin-left: 100px;
+		}
+		#end #reset{
+			margin-left: 30px;
+		}
+   	</style>
+</head>
+<body>
+	<h4>加班提交表</h4>
+	<form id='main' action="{% url 'overtime_application' %}" method="post">
+		{% csrf_token %}
+		<table>
+<!-- 			<tr>
+				<td class='td1'>工号</td>
+				<td><input type="text" name="staffid"></td>
+				<td class='td1'>姓名：</td>
+				<td><input type="text" name="staffName"></td>
+			</tr>
+			<tr>
+				<td class='td1'>性别：</td>
+				<td>
+					<input class='sex' type="radio" name="sex">
+					<span>男</span>
+					<input class='sex' type="radio" name="sex">
+					<span>女</span>
+				</td>
+				<td class='td1'>部门：</td>
+				<td><input type="text" name="section"></td>
+			</tr>
+			<tr>
+				<td class='td1'>职务：</td>
+				<td><input type="text" name="job"></td>
+				<td class='td1'>日期：</td>
+				<td><input type="text" name="date"></td>
+			</tr> -->
+			<tr>
+				<td class='td1'>加班事由：</td>
+				<td>
+					<textarea cols="80" rows="8" name='reason'></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class='td1'>加班起始时间：</td>
+				<td><input type="text" class='easyui-datetimebox date' name="startTime" id='startTime' data-options="required:true,showSeconds:false"></td>
+				<td class='td1'>加班结束时间：</td>
+				<td><input type="text" class='easyui-datetimebox date' name="endTime" id='endTime' data-options="required:true,showSeconds:false"></td>
+			</tr>
+		</table>
+		<p id="end">
+			<input type="submit" value='提交' id='s'>
+			<input id='reset' type="reset" >
+		</p>
+	</form>
+	<script>
+        $(function(){
+            function check(){
+                var startTime = $('#startTime').datetimebox('getValue');
+                var endTime = $('#endTime').datetimebox('getValue');
+                if (!startTime || !endTime) {
+                    $.messager.alert('警告','时间不能为空')
+                    return false
+                }
+                startTime = new Date(startTime);
+                endTime = new Date(endTime);
+                if(startTime > endTime){
+                    $.messager.alert('警告','起始时间晚于结束时间！');
+                    return false
+                }
+            }
+            $('#main').form({
+                url:'/overtime_application/',
+                onSubmit: function(){
+                    return check()
+                },
+                success:function(data){
+                    alert(data)
+                    location.href = "{% url 'overtime_show' %}";
+                }
+            });
+        })
+	</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+</head>
+<body>
+	<table id='section_list'>
+	</table>
+	<div id="toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-attendance" plain="true" onclick="javascript:checkPer()">考勤情况</a>
+	</div>
+	<div id="win" class="easyui-window" title="下属考勤情况" closed="true" style="width:800px;height:400px;padding:5px;">
+		<table id='attendance_list'>
+		</table>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#section_list').datagrid({
+				title:'部门职员信息表', 
+				iconCls:'icon-information',//图标 
+				striped: true,
+				border: true, 
+				collapsible:false,//是否可折叠的 
+				fit: true,//自动大小 
+				idField:'id', 
+				singleSelect:true,//是否单选 
+				pagination:true,//分页控件 
+				rownumbers:true,//行号 
+				sortName:'user_name',
+				sortOrder:'DESC', 
+				remoteSort: false,
+				toolbar: '#toolbar',
+				columns: [[ 
+					{field: 'chk', checkbox: true, width: 80, align: 'center'},
+					{field:'section',title:'部门',width:80, align:'center'},
+					{field:'user_name',title:'工号',width:80, align:'center', sortable: true},
+					{field:'staff_name',title:'姓名', width: 80, align:'center', sortable: true},
+					{field:'gender',title:'性别', width: 80, align:'center'},
+					{field:'position',title:'职位',width:80, align:'center'},				
+					{field:'email',title:'邮箱',width:120, align:'center'},
+					{field:'phone',title:'电话',width:80, align:'center'},
+					{field:'degree',title:'学历',width:80, align:'center'},
+					{field:'school',title:'毕业院校',width:80, align:'center'},
+					{field:'hiredate',title:'入职日期',width:120, align:'center', sortable: true},
+				]],
+				method: 'get',
+				url: '{% url "section_information" %}',
+			});
+		});
+	</script>
+	<script>
+		function checkPer(){
+			var row = $('#section_list').datagrid('getSelected');
+			if (row){
+				$('#attendance_list').datagrid({
+					title:'考勤情况表', 
+					iconCls:'icon-salary',//图标 
+					border: true, 
+					collapsible:false,//是否可折叠的 
+					fit: true,//自动大小 
+					idField:'id', 
+					singleSelect:false,//是否单选 
+					pagination:true,//分页控件 
+					rownumbers:true,//行号 
+					sortName:'salaryMonth',
+					sortOrder:'DESC', 
+					remoteSort: false,
+					queryParams:{
+						user_name: row['user_name']
+					},
+					columns: [[ 
+						{field:'salaryMonth',title:'日期',width: 120, align:'center'},
+						{field:'user_name',title:'工号',width:120, align:'center'},
+						{field:'staff_name',title:'姓名', width: 120, align:'center'},
+						{field:'onday',title:'出勤天数',width:120, align:'center'},
+						{field: 'lateday', title:'迟到天数', width:120, align:'center'},
+						{field:'offday',title:'缺勤天数',width:120, align:'center'},
+						{field:'addday',title:'加班天数',width:120, align:'center'},
+						{field:'outday',title:'外出天数',width:120, align:'center'},
+					]],
+					method: 'get',
+					url: '{% url "get_performance" %}'
+				})
+				$('#win').window('open');
+
+			}else{
+				$.messager.alert('提示','请选择一条数据')
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公管理系统</title>
+    <!-- 引入JQuery -->
+    <script type="text/javascript" src='{% static "easyui/jquery.min.js" %}'></script>
+    <!-- 引入ajax -->
+    <script type="text/javascript" src='{% static "js/csrf_token.js" %}'></script>
+    <link rel="stylesheet" href='{% static "css/default.css" %}' type="text/css">
+   	<style type="text/css">
+   		#center{
+   			position: absolute;
+   			border: 1px solid #95B8E7;
+   			width: 400px;
+   			height: 300px;
+   			left: 50%;
+   			top: 50%;
+   			margin-top: -150px;
+   			margin-left: -200px;
+   		}
+   		h4{
+   			height: 60px;
+   			line-height: 60px;
+   			text-align: center;
+        background-color: #95B8E7;
+        margin-bottom: 40px;
+   		}
+   		p{
+   			margin-top: 10px;
+   			margin-left: 50px;
+   		}
+   		.p1 span{
+   			display: inline-block;
+   			width: 90px;
+   		}
+   		.p1 input{
+   			border: 1px solid #95B8E7;
+			  width: 200px;
+			  height: 30px;
+			  border-radius: 5px;
+   		}
+   		.p2{
+   			margin-top: 25px;
+   		}
+   		.p2 input{
+   			border-radius: 5px;
+    		border: 1px solid #E0ECFF;
+    		background-color:  #95B8E7;
+    		color: white;
+			  width: 50px;
+			  height: 25px;
+			  margin-left: 70px;
+   		}
+   	</style>
+</head>
+<body>
+  <div id='center'>
+		<h4>修改密码</h4>
+		<form>
+      {% csrf_token %}
+			<p class='p1'>
+				<span>旧密码:</span>
+				<input id='opwd' type="text" name="oldpwd">
+			</p>
+			<p class='p1'>
+				<span>新密码:</span>
+				<input id='npwd' type="text" name="newpwd">
+			</p>
+			<p class='p1'>
+				<span>确认新密码:</span>
+				<input id='cpwd' type="text" name="confirmpwd">
+			</p>
+			<p class='p2'>
+				<input id='sub' type="button" name="submit" value='确定'>
+				<input type="reset" name="reset">
+			</p>
+    </form>
+	</div>
+  <script>
+    $(function(){
+      function check(){
+        var npwd = $('#npwd').val();
+        var cpwd = $('#cpwd').val();
+        l = npwd.length;
+        if (l < 6){
+          alert('密码必须大于6位');
+        }
+        else if(npwd != cpwd){
+           alert('两次密码输入不一致！');
+        }else{
+          $.ajax({
+            type: "POST",
+            url: "/getupdatepwd/",
+            data: {opwd:$("#opwd").val(),npwd:$("#npwd").val()},
+            dataType: "text",
+            success: function(data){
+              console.log(data);
+              alert(data);
+            }
+          });
+        }
+      } 
+      $('#sub').click(check);
+    });
+  </script>
+</body>
+</html>

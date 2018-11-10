@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+</head>
+<body>
+	<table id='salary_list'>
+	</table>
+	<script type="text/javascript">
+		$(function(){
+			$('#salary_list').datagrid({
+				title:'工资表', 
+				iconCls:'icon-salary',//图标 
+				border: true, 
+				striped: true,
+				collapsible:false,//是否可折叠的 
+				fit: true,//自动大小 
+				idField:'id', 
+				singleSelect:false,//是否单选 
+				pagination:true,//分页控件 
+				rownumbers:true,//行号 
+				sortName:'salaryMonth',
+				sortOrder:'DESC', 
+				remoteSort: false,
+				toolbar: '#toolbar',
+				columns: [[ 
+					{field:'salaryMonth',title:'日期',width: 80, align:'center', sortable: true},
+					{field:'user_name',title:'工号',width:80, align:'center', sortable: true},
+					{field:'staff_name',title:'姓名', width: 80, align:'center', sortable: true},
+					{field:'onday',title:'出勤天数',width:80, align:'center', sortable: true},
+					{field:'basepay',title:'基本工资',width:80, align:'center', sortable: true},
+					{field:'overtime_pay',title:'加班工资',width:80, align:'center', sortable: true},
+					{field:'outday_pay', title:'外出工资',width:80, align:'center', sortable:true},
+					{field:'offday_deduct',title:'缺勤扣除',width:80, align:'center', sortable: true},
+					{field:'busy_deduct',title:'事假扣除',width:80, align:'center', sortable: true},
+					{field:'ill_deduct',title:'病假扣除',width:80, align:'center', sortable: true},
+					{field:'totalpay',title:'实际工资',width:80, align:'center', sortable: true}
+				]],	
+				method: 'get',
+				url: '{% url "salary" %}'
+			});
+		});
+	</script>
+</body>
+</html>

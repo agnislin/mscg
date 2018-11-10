@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>注册界面</title>
+	<link rel="stylesheet" href='login-register.css'>
+</head>
+<body>
+	
+	<div>
+		<h1>oa办公系统</h1>
+		<form action='/login' method='post'>
+			<p>
+				<a href='file:///D:/Users/Administrator/Desktop/zhongqixiangmu/page/login.html'>登录</a>
+				<a href='file:///D:/Users/Administrator/Desktop/zhongqixiangmu/page/register.html'>注册</a>
+			</p>
+			<p>
+				<input type="text" class='p1' name="uname1" placeholder='创建一个用户名'>
+			</p>
+			<p>
+				<input type="password" class='p1' name="passwd1" placeholder="设置登录密码">
+			</p>
+			<p>
+				<input type="password" class='p1' name="passwd2" placeholder="确认密码">
+			</p>
+			<p>
+				<input type="text" class='p2' name="checkcode" placeholder="请输入验证码">
+				<canvas id="canvas"></canvas>
+			</p>
+			<p>
+				<button>注册</button>
+			</p>
+		</form>
+	</div>
+	<script src='checkCode.js'></script>
+</body>
+</html>

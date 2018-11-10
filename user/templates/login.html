@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>登录界面</title>
+	<link rel="stylesheet" href="{% static 'css/login-register.css' %}">
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/csrf_token.js' %}"></script>
+	<style>
+		.error{
+			color:red;
+			font-size:16px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<h1>oa办公系统</h1>
+		<form action="{% url 'login' %}" method='post' id='form'>
+			{% csrf_token %}
+			<p>
+				<a href='/login/'>登录</a>
+			</p>
+			<p>
+				<input type="text" class='p1' name="username" placeholder='请输入您的用户名' id='username'>
+			</p>
+			<p>
+				<input type="password" class='p1' name="password" placeholder="请输入密码" id='password'>
+			</p>
+			<p>
+				<input type="text" class='p2' name="checkcode" placeholder="请输入验证码" id='checkcode'>
+				<canvas id="canvas"></canvas>
+			</p>
+			{% if message %}
+			<p class='error'>{{ message }}</p>
+			{% endif %}
+			<p>
+				<input type="submit" value='登录' id='login'>
+			</p>
+		</form>
+	</div>
+	<script src="{% static 'js/checkCode.js' %}"></script>
+	<script>
+		var check=false;
+		$('#checkcode').on('input',function(){
+			var code;
+			code = list_code.join('');
+			code = code.toLowerCase()
+			val = $('#checkcode').val().toLowerCase()
+			if (code == val) {
+				check=true
+			}else{
+				check=false
+			}
+		})
+		$(document).keyup(function(e){
+			if(e.keyCode == 13){
+				$('#login').trigger('click')
+			}
+		})
+		$('#login').click(function(e){
+			e.preventDefault()
+			if (check) {
+				$('#form').submit()
+			}else{
+				$('#canvas').trigger('click')
+				alert('验证码不正确')
+			}
+			
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src='{% static "easyui/jquery.min.js"%}'></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src='{% static "easyui/jquery.easyui.min.js"%}'></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src='{% static "easyui/locale/easyui-lang-zh_CN.js"%}'></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href='{% static "easyui/themes/default/easyui.css"%}' type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href='{% static "easyui/themes/icon.css"%}' type="text/css"/>
+   	<!-- 引入ajax -->
+    <script type="text/javascript" src='{% static "js/csrf_token.js" %}'></script>
+   	<link rel="stylesheet" href='{% static "css/default.css"%}' type="text/css">
+   	<style type="text/css">
+		.dd td>input,select,textarea{
+		   border:1px solid #95B8E7;
+		   border-radius: 5px;
+		}
+		.dd td>input,select{
+		   box-sizing: content-box;
+		   width: 150px;
+		   height: 25px;
+		}
+		.dd td{
+		   	padding-top: 10px;
+		 	padding-left: 10px;
+		 	width: 100px;
+		 	height: 25px;
+		}
+		#num{
+			background-color: rgba(200,200,200,0.5);
+		}
+		#dlg .sex{
+			width: 30px;
+			height: 16px;
+		}
+		h3{
+			color: #999;
+		}
+		.hidden{
+			position: absolute;
+			top: 0;
+			left: 0;
+			background-color: rgba(255,255,255,.5);
+			display: none;
+			width: 100%;
+			height: 100%;
+		}
+   	</style>
+</head>
+<body>
+	<table id="dg" class="easyui-datagrid" style='overflow: auto;' fit="true" toolbar="#toolbar" rownumbers="true" fitColumns="false" singleSelect="true" pagination="true" method='get' url='/getstaff/'>
+		<thead>
+			<tr>
+				<th field='ck' checkbox='true' width='100' rowspan="2"></th>
+				<th field='user_id' align="center" width='100' rowspan="2">工号</th>
+				<th field='staff_name' align='center' width='100' rowspan="2">姓名</th>
+				<th field='role_name' align='center' width='100' rowspan="2">角色</th>
+				<th field='工作信息' align='center' width='100' colspan="5">工作信息</th>
+				<th field='hiredate' align='center' width='100' rowspan="2">入职日期</th>
+				<th field='基本信息' align='center' width='100' colspan="5">基本信息</th>
+				<th field='学历信息' align='center' width='100' colspan="2">学历信息</th>
+				<th field='staff_remarks' align='center' width='250' rowspan="2">备注</th>
+				<th field='role_id' hidden='true' rowspan="2"></th>
+				<th field='section_id' hidden='true' rowspan="2"></th>
+				<th field='position_id' hidden='true' rowspan="2"></th>
+			</tr>
+			<tr>
+				<th field='section_name' align='center' width='100'>所属部门</th>
+				<th field='position_name' align='center' width='100'>职位</th>
+				<th field='staff_id' align='center' width='100'>薪资</th>
+				<th field='yearday' align='center' width='100'>年假</th>
+				<th field='illday' align='center' width='100'>病假</th>
+				<th field='gender' align='center' width='100'>性别</th>
+				<th field='phone_num' align='center' width='140'>电话</th>
+				<th field='birth' align='center' width='130'>出生日期</th>
+				<th field='Email' align='center' width='150'>邮箱</th>
+				<th field='address' align='center' width='150'>地址</th>
+				<th field='degree' align='center' width='100'>学历</th>
+				<th field='school' align='center' width='150'>毕业院校</th>
+			</tr>
+		</thead>  
+	</table>
+	<div id="toolbar">
+	    <a href="#" id='add' class="easyui-linkbutton" iconCls="icon-add" plain="true" >增加</a>
+	    <a href="#" id='update' class="easyui-linkbutton" iconCls="icon-edit" plain="true" >修改</a>
+	    <a href="#" id='delete' class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+<!-- 	    <input type="text" id='name' name="queryname" placeholder="请输入姓名" />
+	    <input type="button" onclick="doSearch()" value='查询'> -->
+	</div>
+	<div class='hidden'>
+		<div id='dlg' class='easyui-dialog  dd' style='width:600px;height:400px;padding:10px 20px; ' closed='true' buttons='#dlg-buttons'>
+			<div class="ftitle"><h3>员工信息</h3></div>
+			<hr>
+			<form id="fm" method="post">
+				{% csrf_token %}
+				<table>
+					<tr>
+						<td>工号：</td>
+						<td><input type="text" name="user_id"></td>
+						<td>密码:</td>
+						<td><input type="text" name="user_passwd"></td>
+					</tr>
+					<tr>
+						<td>角色：</td>
+						<td>
+							<select name='role_id'>
+								{% for i in role %}
+								<option value={{i.role_id}}>
+									{{i.role_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+						<td>所属部门：</td>
+						<td>
+							<select name='section_id'>
+								{% for i in section %}
+								<option value={{i.section_id}}>
+									{{i.section_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>薪资：</td>
+						<td><input type="number" name="staff_id"></td>
+						<td>职位：</td>
+						<td>
+							<select name='position_id'>
+								{% for i in position %}
+								<option value={{i.position_id}}>
+									{{i.position_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>年假</td>
+						<td><input type="number" name="yearday"></td>
+						<td>病假</td>
+						<td><input type="number" name="illday"></td>
+					</tr>
+					<tr>
+						<td>学历：</td>
+						<td><input type="text" name="degree"></td>
+						<td>毕业院校：</td>
+						<td><input type="text" name="school"></td>
+					</tr>
+					<tr>
+					<td>姓名：</td>
+					<td><input type="text" name="staff_name"></td>
+					<td>性别:</td>
+					<td>
+							<input id='male' class='sex' type="radio" name="gender" value='male'>
+							<span>男</span>
+							<input id='female' class='sex' type="radio" name="gender" value='female'> 
+							<span>女</span>
+						</td>
+					</tr>
+					<tr>
+						<td>入职日期：</td>
+						<td><input type="text" class='easyui-datebox' name="hiredate"></td>
+						<td>出生日期：</td>
+						<td><input type='text' class='easyui-datebox' name='birth'></td>
+					</tr>
+					<tr>
+						<td>电话：</td>
+						<td><input type="number" name="phone_num"></td>
+						<td>邮箱：</td>
+						<td><input type="email" name="Email"></td>
+					</tr>
+					<tr>
+						<td>地址:</td>
+						<td><input type="text" name="address"></td>
+					</tr>
+					<tr>
+						<td>备注：</td>
+						<td colspan="3">
+							<textarea cols="50" rows="5" name='staff_remarks'></textarea>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="dlg-buttons">
+			<a href='#' id='addsubmit' class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#fm input,select,textarea').val('')">重置</a>
+		</div>
+	</div>
+	<div class='hidden'>
+		<div id='dlg1' class='easyui-dialog dd' style='width:600px;height:400px;padding:10px 20px; ' closed='true' buttons='#dlg-buttons1'>
+			<div class="ftitle"><h3>员工信息</h3></div>
+			<hr>
+			<form id="fm1" method="post">
+				{% csrf_token %}
+				<table>
+					<tr>
+						<td>工号：</td>
+						<td><input id='num' type="text" name="user_id" readonly unselectable="on"></td>
+						<td>密码:</td>
+						<td><input type="text" name="user_passwd"></td>
+					</tr>
+					<tr>
+						<td>角色：</td>
+						<td>
+							<select name='role_id'>
+								{% for i in role %}
+								<option value={{i.role_id}}>
+									{{i.role_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+						<td>所属部门：</td>
+						<td>
+							<select name='section_id'>
+								{% for i in section %}
+								<option value={{i.section_id}}>
+									{{i.section_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>薪资：</td>
+						<td><input type="number" name="staff_id"></td>
+						<td>职位：</td>
+						<td>
+							<select name='position_id' >
+								{% for i in position %}
+								<option value={{i.position_id}}>
+									{{i.position_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>年假</td>
+						<td><input type="number" name="yearday"></td>
+						<td>病假</td>
+						<td><input type="number" name="illday"></td>
+					</tr>
+					<tr>
+						<td>备注：</td>
+						<td colspan="3">
+							<textarea cols="50" rows="5" name='staff_remarks'></textarea>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="dlg-buttons1">
+			<a href='#' id='updsubmit' class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#fm1 input,select,textarea').val('')">重置</a>
+		</div>
+	</div>
+	<script>
+		$(function(){
+			//增加员工信息
+			$('#add').click(
+				function(){
+				$('.hidden').css({
+					'display': 'block',
+				});
+				$('#dlg').dialog({
+					title: '新增员工',
+		    		onClose:function(){
+		     			$('#addsubmit').unbind();
+		     			$('.hidden').css({
+							'display': 'none',
+						});
+		    		}
+	    		});
+				$('#dlg').dialog('open');
+				$('#fm').form('clear');
+				$('#addsubmit').on('click',
+				function(){
+					save('/addstaff/', $('#fm').serialize());
+				});	
+			});
+			//修改员工信息
+			$('#update').click(
+				function(){
+					var row = $('#dg').datagrid('getSelected');
+					if(row){
+						$('.hidden').css({
+							'display': 'block',
+						});
+						$('#dlg1').dialog({
+							title: '修改员工',
+				    		onClose:function(){
+				     			$('#updsubmit').unbind();
+				     			$('.hidden').css({
+									'display': 'none',
+								});
+				    		}
+			    		});
+						$('#dlg1').dialog('open').dialog('setTitle','修改员工');
+						$('#fm1').form('load',row);
+						// $('#dlg-buttons a:first-child').attr('id','updsubmit');
+						$('[name="position_id"][value='+row.position_id+']').attr('selected','selected');
+						$('[name="section_id"][value='+row.section_id+']').attr('selected','selected');
+						$('[name="role_id"][value='+row.role_id+']').attr('selected','selected');
+						$('#updsubmit').on('click',
+							function(){
+							save('/updstaff/', $('#fm1').serialize());
+						});
+					}else{
+						alert('亲，你没选择修改的数据哦！');
+					}
+			});
+			//删除员工信息
+			$('#delete').click(function(){
+				var row = $('#dg').datagrid('getSelected');
+				if(row){
+					save('/delstaff/', {csrfmiddlewaretoken: '{{ csrf_token }}',
+						"user_name":row.user_id});
+				}else{
+					alert('亲，你没选择修改的数据哦！');
+				}
+
+			})
+			/*提交表单*/
+			function save(urls, record){
+				if(window.confirm('确定提交？')){
+					$.ajax({
+						type:'POST',
+						url: urls,
+						data: record,
+						dataType: "text",
+	            		success: function(data){
+	              			alert(data);
+	             			location.href = '{% url 'showstaff' %}';
+	            		},
+	            		error: function(data){
+	            			$.messager.alert('提示', data.responseText)
+	            		}
+					});
+				}else{
+					return
+				}
+			}
+		});
+	</script>
+</body>
+</html>

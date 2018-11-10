@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公管理系统</title>
+    <!-- 引入JQuery -->
+    <script type="text/javascript" src='{% static "easyui/jquery.min.js" %}'></script>
+    <!-- 引入ajax -->
+    <script type="text/javascript" src='{% static "js/csrf_token.js" %}'></script>
+	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+	<style type="text/css">
+   		#center{
+   			position: absolute;
+   			border: 1px solid #95B8E7;
+   			width: 500px;
+   			height: 400px;
+   			left: 50%;
+   			top: 50%;
+   			margin-top: -200px;
+   			margin-left: -250px;
+   		}
+   		.p1{
+   			margin-top: 10px;
+   			margin-left: 50px;
+   		}
+   		h4{
+	   		height: 60px;
+	   		line-height: 60px;
+	   		text-align: center;
+	        background-color: #95B8E7;
+	        margin-bottom: 40px;
+   		}
+		textarea{
+			border: 1px solid #95B8E7;
+			border-radius: 5px;
+			width: 390px;
+			height: 120px;
+		}
+		.p2 span,input{
+			width: 50px;
+			height: 15px;
+		}
+		#end input{
+			border-radius: 5px;
+    		border: 1px solid #E0ECFF;
+    		background-color:  #95B8E7;
+    		color: white;
+			width: 70px;
+			height: 30px;
+			margin-top: 30px;
+			margin-left: 100px;
+		}
+		#title{
+			width:200px;
+			height: 30px;
+			border-radius: 5px;
+			border: 1px solid #95B8E7;
+    		background-color:  #fff;
+			padding-left: 5px;
+			line-height: 30px;
+		}
+	</style>
+</head>
+<body>
+	<div id='center'>
+		<h4>发送通知</h4>
+		<form>
+			{% csrf_token %}
+			<p class="p1">
+				<span>通知标题：</span>
+				<input type="text" id='title'>
+			</p>
+			<p class='p1'>
+				<span>通知内容：</span>
+			</p>
+			<p class='p1'>
+				<textarea id='content'></textarea>
+			</p>
+			<p class='p1 p2'>
+				<input id='staff' type="checkbox" name="staff" value="普通员工">
+				<span>普通员工</span>
+				<input id='superior' type="checkbox" name="superior" value="部门主管">
+				<span>部门主管</span>
+			</p>
+			<p id='end'>
+				<input id='sub' type="submit" name="submit" value='发送'>
+				<input id='reset' type="reset" >
+			</p>
+		</form>
+	</div>
+	<script>
+		$('#sub').click(
+			function(e){
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url:'/sendnotice/',
+					data: {
+
+						title: $('#title').val(),
+						content:$('#content').val(),
+						isstaff:$('#staff').is(":checked"),
+						staff:$('#staff').val(),
+						issuperior:$('#superior').is(":checked"),
+						superior:$('#superior').val(),
+					},
+					dataType: 'text',
+					success: function(data){
+						alert(data);
+					},
+				});
+			});
+	</script>
+</body>
+</html>

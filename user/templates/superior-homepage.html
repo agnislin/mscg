@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block style %}
+   	<style type="text/css">
+   		.mybutton{
+   			border: 1px solid #bbb;
+   			background-color: #F5F5F5;
+   		}
+/*   		.mybutton1{
+   			border: 1px solid #bbb;
+   			background-color: #F5F5F5;
+   			border-radius: 5px;
+   			text-align: center;
+   		}*/
+   	</style>
+{% endblock %}
+{% block messagebar %}
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("工资查询","{% url 'salary_show' %}")'>工资查询</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("假期查询","{% url 'vacation' %}")'>假期查询</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("考勤查询","{% url 'attendance' %}")'>考勤查询</a>
+	</p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("部门信息查询","{% url 'section_information_show' %}")'>部门信息查询</a>
+	</p>
+{% endblock %}
+{% block officebar %}
+	<p>
+		<a href='#' class='easyui-menubutton mybutton' data-options='width:140, align:"center",menu:"#check",'>审批</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("请假","{% url 'vacation_apply_show' %}")'>请假</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("加班","{% url 'overtime_show' %}")'>加班</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("外出","{% url 'out_show' %}")'>外出</a>
+	</p>
+{% endblock %}
+{% block communicationbar %}
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("查看通讯录","{% url 'addresslist_show' %}")'>查看通讯录</a>
+	</p>
+{% endblock %}
+{% block systembar %}
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("个人信息",
+		"{% url 'personal' %}")'>个人信息</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("发布通知",
+		"{% url "shownotice" %}")'>发布通知</a>
+	</p>
+	<p>
+		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("修改密码",
+		"{% url "showupdpwd" %}")'>修改密码</a>
+	</p>
+	<p>
+		<a href='{% url "logout" %}' class='easyui-linkbutton' data-options='width:140, align:"center",'>退出系统</a>
+	</p>
+{% endblock %}
+{% block add %}
+    <div id='check'>
+		<div data-options='iconCls:"icon-leave1"' onclick='addTab("请假审批","{% url 'vacation_approval_show' %}")'>
+    		请假审批
+    	</div>
+    	<div data-options='iconCls:"icon-out"' onclick='addTab("外出审批","{% url 'out_approval_show' %}")'>
+    		外出审批
+    	</div>
+	</div>
+{% endblock %}

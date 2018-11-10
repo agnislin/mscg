@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+	<style type="text/css">
+		h4{
+			height: 60px;
+   			line-height: 60px;
+   			text-align: center;
+        	background-color: #95B8E7;
+        	margin-bottom: 40px;
+		}
+		.p1{
+			margin-top: 20px;
+			margin-left: 100px;
+		}
+		.p1 span{
+			width: 200px;
+			height: 30px;
+		}
+		#right{
+			position: absolute;
+			top: 100px;
+			right: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div id='main'>
+		<h4>2018年假期表</h4>
+		{% for i in vacation_info %}
+		<p class='p1'>
+			<span>{{ i.field }}：</span>
+			<span>{{ i.value }}</span>
+		</p>
+		{% endfor %}
+	</div>
+	<script>
+	</script>
+</body>
+</html>

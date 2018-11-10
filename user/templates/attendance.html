@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+</head>
+<body>
+	<table id='attendance_list'>
+	</table>
+	<script type="text/javascript">
+		$(function(){
+			$('#attendance_list').datagrid({
+				title:'考勤情况表', 
+				iconCls:'icon-salary',//图标 
+				border: true, 
+				collapsible:false,//是否可折叠的 
+				fit: true,//自动大小 
+				idField:'id', 
+				singleSelect:false,//是否单选 
+				pagination:true,//分页控件 
+				rownumbers:true,//行号 
+				sortName:'salaryMonth',
+				sortOrder:'DESC', 
+				remoteSort: false,
+				toolbar: '#toolbar',
+				columns: [[ 
+					{field:'salaryMonth',title:'日期',width: 120, align:'center'},
+					{field:'user_name',title:'工号',width:120, align:'center'},
+					{field:'staff_name',title:'姓名', width: 120, align:'center'},
+					{field:'onday',title:'出勤天数',width:120, align:'center'},
+					{field:'lateday',title:'迟到天数',width:120, align:'center'},
+					{field:'offday',title:'缺勤天数',width:120, align:'center'},
+					{field:'addday',title:'加班天数',width:120, align:'center'},
+					{field:'outday',title:'外出天数',width:120, align:'center'},
+				]],
+				method: 'get',
+				url: '{% url "get_performance" %}'
+			});
+		});
+	</script>
+</body>
+</html>

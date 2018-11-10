@@ -1,0 +1,50 @@
+#hidden{
+   top:0;
+   left:0;
+   display: none;
+}
+#hidden>div{
+   border:1px solid #95B8E7;
+   position: relative; 
+   margin:0 auto; 
+   background-color: white;
+   top: 50%;
+}
+#title{
+   background-color: #E0ECFF;
+   height:35px;
+   line-height: 35px;
+   padding-left: 10px;
+}
+#hidden td>input,select,textarea{
+   border:1px solid #95B8E7;
+}
+#hidden td>input,select{
+   box-sizing: border-box;
+   width: 150px;
+   height: 25px;
+}
+#hidden td{
+   padding-top: 10px;
+ 	padding-left: 10px;
+ 	width: 100px;
+ 	height: 25px;
+}
+#end{
+   margin-top: 10px;
+}
+#end input{
+   width: 60px;
+   height: 25px;
+   border: 1px solid #E0ECFF;
+   background-color: #E0ECFF;
+   color: #2779AA;
+}
+#end button{
+   margin-left: 30px;
+   width: 60px;
+   height: 25px;
+   background-color: #E0ECFF;
+   border: 1px solid #E0ECFF;
+   color: #2779AA;;
+}

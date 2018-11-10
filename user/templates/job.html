@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公管理系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src='{% static "easyui/jquery.min.js" %}'></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src='{% static "easyui/jquery.easyui.min.js" %}'></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src='{% static "easyui/locale/easyui-lang-zh_CN.js" %}'></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href='{% static "easyui/themes/default/easyui.css" %}' type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href='{% static "easyui/themes/icon.css" %}' type="text/css"/>
+   	<link rel="stylesheet" href='{% static "css/default.css" %}' type="text/css">
+   	<!-- 引入ajax -->
+    <script type="text/javascript" src='{% static "js/csrf_token.js" %}'></script>
+   	<style type="text/css">
+		#dlg td>input,select{
+		   border:1px solid #95B8E7;
+		   border-radius: 5px;
+		   box-sizing: content-box;
+		   width: 150px;
+		   height: 25px;
+		   margin-top: 20px;
+		   vertical-align: middle;
+		}
+		#dlg td{
+		   	padding-top: 10px;
+		 	padding-left: 10px;
+		 	width: 100px;
+		 	height: 25px;
+		}
+		h3{
+			color: #999;
+		}
+		#hidden{
+			position: absolute;
+			top: 0;
+			left: 0;
+			background-color: rgba(255,255,255,.5);
+			display: none;
+			width: 100%;
+			height: 100%;
+		}
+   	</style>
+</head>
+<body>
+	<table id='job_list'>
+	</table>
+	<div id="toolbar">
+	    <a href="#" id='add' class="easyui-linkbutton" iconCls="icon-add" plain="true" >增加</a>
+	    <a href="#" id='update' class="easyui-linkbutton" iconCls="icon-edit" plain="true" >修改</a>
+	    <a href="#" id='delete' class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+<!-- 	    <input type="text" id='name' name="queryname" placeholder="请输入姓名" />
+	    <input id='query' type="button" value='查询'> -->
+	</div>
+	<div id='hidden'>
+		<div id='dlg' class='easyui-dialog  dd' style='width:400px;height:300px;padding:10px 20px; ' closed='true' buttons='#dlg-buttons' >
+			<div class="ftitle"><h3>部门信息</h3></div>
+			<hr> 
+			<form id='fm' method='post'>
+				{% csrf_token %}
+				<table id='table'>
+	<!-- 				<tr>
+						<td>职位ID：</td>
+						<td><input id='sid' type="text" name="position_id"></td>
+					</tr> -->
+					<tr>
+						<input id='sid' type="text" name="position_id" hidden>
+						<td>职位名称:</td>
+						<td><input type="text" name="position_name"></td>
+					</tr>
+					<tr>
+						<td>所属部门:</td>
+						<td>
+							<select name='section_id'>
+								{% for i in section %}
+								<option value={{i.section_id}}>
+									{{i.section_name}}
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="dlg-buttons">
+			<a href='#' class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#fm input,select,textarea').val('')">重置</a>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#job_list').datagrid({
+				title:'职位列表', 
+				iconCls:'icon-job',//图标 
+				border: true, 
+				collapsible:false,//是否可折叠的 
+				fit: true,//自动大小 
+				idField:'id', 
+				singleSelect:true,//是否单选 
+				pagination:true,//分页控件 
+				rownumbers:true,//行号 
+				// sortName:'position_id',
+				// sortOrder:'ASC', 
+				remoteSort: false,
+				toolbar: '#toolbar',
+				columns: [[ 
+					{field:'chk',checkbox: true,width: 80, align:'center'},
+					{field:'position_id',title:'职位ID',width:120, align:'center', hidden:'true'},
+					{field:'position_name',title:'职位名称', width: 120, align:'center'},
+					{field:'section_id',title:'部门ID',width:120, align:'center', hidden:'true'},
+					{field:'section_name', title:'所属部门',width:120,align:'center'},
+				]],	
+				method: 'get',
+				url: '/getjob/',			
+			});
+			//增加职位信息
+			$('#add').click(
+				function(){
+				$('#hidden').css({
+					'display': 'block',
+				});
+				$('#sid').removeAttr("readonly");	
+				$('#dlg').dialog({
+					title: '新增职位',
+		    		onClose:function(){
+		     			$('#addsubmit').unbind();
+		     			$('#hidden').css({
+							'display': 'none',
+						});
+		    		}
+	    		});
+				$('#dlg').dialog('open');
+				$('#fm').form('clear');
+				$('#dlg-buttons a:first-child').attr('id','addsubmit');
+				$('#addsubmit').on('click',
+				function(){
+					save('/addjob/', $('#fm').serialize());
+				});
+			});
+			//修改职位信息
+			$('#update').click(
+				function(){
+					
+					var row = $('#job_list').datagrid('getSelected');
+					if(row){
+						$('#hidden').css({
+							'display': 'block',
+						});
+						$('#sid').attr("readonly","readonly");
+						$('#dlg').dialog({
+							title: '修改职位',
+				    		onClose:function(){
+				     			$('#updsubmit').unbind();
+				     			$('#hidden').css({
+									'display': 'none',
+								});
+		    				}
+	    				});
+						$('#dlg').dialog('open');
+						$('#fm').form('load',row);
+						$('[name="section_id"][value="+row.section_id+"]').attr('selected','selected')
+						$('#dlg-buttons a:first-child').attr('id','updsubmit');
+						$('#updsubmit').on('click',
+							function(){
+							save('/updjob/', $('#fm').serialize());
+						});
+					}else{
+						alert('亲，你没选择修改的数据哦！');
+					}
+			});
+			//删除职位信息
+			$('#delete').click(function(){
+				var row = $('#job_list').datagrid('getSelected');
+				if(row){
+					save('/deljob/', {csrfmiddlewaretoken: '{{ csrf_token }}',
+						"position_id":row.position_id});
+				}else{
+					alert('亲，你没选择修改的数据哦！');
+				}
+
+			})
+			/*提交表单*/
+			function save(urls, record){
+				if(window.confirm('确定提交？')){
+					$.ajax({
+						type:'POST',
+						url: urls,
+						data: record,
+						dataType: "text",
+	            		success: function(data){
+	             			alert(data);
+	             			location.href = '{% url 'showjob' %}';
+	            		}
+					});
+				}else{
+					return
+				}
+			}
+		});
+	</script>
+</body>
+</html>

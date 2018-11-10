@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script type="text/javascript" src='{% static "easyui/jquery.min.js" %}'></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src='{% static "easyui/jquery.easyui.min.js" %}'></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src='{% static "easyui/locale/easyui-lang-zh_CN.js" %}'></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href='{% static "easyui/themes/default/easyui.css" %}' type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href='{% static "easyui/themes/icon.css" %}' type="text/css"/>
+   	<link rel="stylesheet" href='{% static "css/default.css" %}' type="text/css">
+   	<link rel="stylesheet" href="{% static 'css/homepage.css' %}" type="text/css">
+   	<style>
+   		#sp{
+   			display: inline-block;
+   			float: right;
+			margin-right: 20px;
+   		}
+   	</style>
+</head>
+<body>
+	<div class='easyui-layout' data-options='fit:true'>
+		<!-- 标题栏 -->
+		<div region='north'  style='height: 55px;line-height: 55px;background-color: #95B8E7;overflow: hidden;'>
+			<p style='color: #362B36;font-size: 23px;margin-left: 20px'>
+				<span>OA办公系统</span>
+				<span id='sp'>欢迎您,{{staff_name}}</span>
+			</p >
+		</div>
+		<!-- 左侧菜单栏 -->
+		<div  region='west' split='true' title='菜单导航' style='width: 150px'>
+			<div id='left' class="easyui-accordion">
+		        <div title="员工管理">
+		        	<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("员工列表","{% url "showstaff" %}")'>员工列表</a>
+		        </div>
+		        <div title="部门管理">
+		        	<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("部门列表","{% url "showsection" %}")'>部门列表</a>
+		        </div>
+		        <div title='职位管理'>
+		        	<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("职位列表","{% url "showjob" %}")'>职位列表</a>
+		        </div>
+		        <div title="办公管理">
+		        	<p>
+		        		<a href='#' class='easyui-menubutton mybutton' data-options='width:140, align:"center",menu:"#check",'>审批</a>
+		        	</p>
+		        </div>
+<!-- 		        <div title="权限管理">
+		        	<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("角色管理","role.html")'>角色管理</a>
+		        </div> -->
+		        <div title='系统管理'>
+		        	<p>
+		        		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("修改密码",
+		        		"{% url "showupdpwd" %}")'>修改密码</a>
+		        	</p>
+		        	<p>
+		        		<a href='#' class='easyui-linkbutton' data-options='width:140, align:"center",' onclick='addTab("发布通知",
+		        		"{% url "shownotice" %}")'>发布通知</a>
+		        	</p>
+		        	<p>
+		        		<a href='{% url "logout" %}' class='easyui-linkbutton' data-options='width:140, align:"center"'>退出系统</a>
+		        	</p>
+		        </div>
+		    </div>
+	    </div>
+	  	<div id='check'>
+	   		<div data-options='iconCls:"icon-leave1"' onclick='addTab("请假审批","{% url 'vacation_approval_show' %}")'>
+		       	请假审批
+		    </div>
+		    <div data-options='iconCls:"icon-out"' onclick='addTab("外出审批","{% url 'out_approval_show' %}")'>
+		        外出审批
+		    </div>
+		</div>
+	    <!-- 主体内容 -->
+	    <div region='center'>
+	    	<div id='tt' class='easyui-tabs' data-options='fit:true,tabWidth:112'>
+	    		<div title='首页'>
+	    			<div class="notice">
+	    				<p class="notice-head">通知</p>
+	    				{% for i in notice %}
+	    				<div class="notice-item">
+	    					<p class="notice-title">{{ i.title }}</p>
+	    					<div class="notice-content">
+	    						<p>{{ i.content }}</p>
+								<p class='notice-sender'>{{ i.sender }}</p>
+								<p class="notice-sender">{{ i.date }}</p>
+	    					</div>
+	    				</div>
+	    				{% endfor %}
+	    			</div>
+	    			<div class="notice">
+	    				<p class="notice-head">个人信息</p>
+	    				{% for i in message %}
+	    				<div class="notice-item">
+	    					<p class="notice-title">{{ i.title }}</p>
+	    					<div class="notice-content">
+	    						<p>{{ i.content }}</p>
+	    						<p class="notice-sender">{{ i.date }}</p>
+	    					</div>
+	    				</div>
+	    				{% endfor %}
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+	    <!-- 底部 -->
+	    <div region='south' style='height: 35px;line-height: 30px; text-align: center;
+	    margin-top: 8px;'>
+	    	<div style="color: #362B36">Copyright &copy by 码上成功小组</div>
+	    </div>
+	    <!-- 右侧栏 -->
+	    <div  region='east' split='true' title='日历' style='width: 190px'>
+	    	<div class='easyui-calendar' style='width:180px;height:180px'>
+	    	</div>
+	    </div>
+	</div>
+	<script>
+		 /*动态添加tab*/
+		function addTab(title, url){
+	    	if ($('#tt').tabs('exists', title)){
+	    		$('#tt').tabs('select', title);
+	    	}else{
+	    		var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+	    		$('#tt').tabs('add',{
+	    			title:title,
+	    			content:content,
+	    			closable:true 
+	    		});
+	    	}
+	    }
+    </script>
+</body>
+</html>

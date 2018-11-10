@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+   	<style type="text/css">
+   		h4{
+			height: 60px;
+   			line-height: 60px;
+   			text-align: center;
+        	background-color: #95B8E7;
+        	margin-bottom: 40px;
+		}
+		#main{
+			margin-top: 20px;
+		}
+		#main table tr{
+			display: block;
+			margin-top: 10px;
+		}
+		#main table tr td>input,select{
+			box-sizing: content-box;
+			border: 1px solid #95B8E7;
+			width: 200px;
+			height: 30px;
+			border-radius: 5px;
+		}
+		#main .date{
+			border: none;
+		}
+		#main textarea{
+			border: 1px solid #95B8E7;
+			border-radius: 5px;
+		}
+		#main .sex{
+			vertical-align: middle;
+			height: 20px;
+			width: 78px;
+		}
+		.td1{
+			width: 100px;
+			padding-left: 100px
+		}
+		#end input{
+			border-radius: 5px;
+    		border: 1px solid #E0ECFF;
+    		background-color:  #95B8E7;
+    		color: white;
+			width: 70px;
+			height: 30px;
+			margin-top: 30px;
+			margin-left: 100px;
+		}
+		#end #reset{
+			margin-left: 30px;
+		}
+   	</style>
+</head>
+<body>
+	<h4>外出申请表</h4>
+	<form id='main' action="{% url 'out_application' %}" method="post">
+		{% csrf_token %}
+		<table>
+<!-- 			<tr>
+				<td class='td1'>工号</td>
+				<td><input type="text" name="staffid"></td>
+				<td class='td1'>姓名：</td>
+				<td><input type="text" name="staffName"></td>
+			</tr>
+			<tr>
+				<td class='td1'>性别：</td>
+				<td>
+					<input class='sex' type="radio" name="sex">
+					<span>男</span>
+					<input class='sex' type="radio" name="sex">
+					<span>女</span>
+				</td>
+				<td class='td1'>部门：</td>
+				<td><input type="text" name="section"></td>
+			</tr>
+			<tr>
+				<td class='td1'>职务：</td>
+				<td><input type="text" name="job"></td>
+				<td class='td1'>日期：</td>
+				<td><input type="text" name="date"></td>
+			</tr> -->
+			<tr>
+				<td class="td1">目的地：</td>
+				<td><input type="text" name='destination'></td>
+			</tr>
+			<tr>
+				<td class='td1'>外出事由：</td>
+				<td>
+					<textarea cols="80" rows="8" name='reason'></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class='td1'>出发日期：</td>
+				<td><input type="text" class='easyui-datebox date' name="startDay" data-options="required:true" id='startDay'></td>
+				<td class='td1'>回来日期：</td>
+				<td><input type="text" class='easyui-datebox date' name="endDay" data-options="required:true" id='endDay'></td>
+			</tr>
+		</table>
+		<p id="end">
+			<input type="submit" value='提交' id='s'>
+			<input id='reset' type="reset" >
+		</p>
+	</form>
+	<script>
+		$(function(){
+			function check(){
+				startDay = $('#startDay').datebox('getValue')
+				endDay= $('#endDay').datebox('getValue')
+				if (!startDay || !endDay){
+					$.messager.alert('警告', '日期不能为空')
+					return false
+				}
+				startDay = new Date(startDay)
+				endDay = new Date(endDay)
+				if (endDay <= startDay){
+					$.messager.alert('警告', '结束日期不可小于起始日期')
+					return false
+				}
+			}
+			$('#main').form({
+				url: '/out_application/',
+				onSubmit: function(){
+					return check()
+				},
+				success: function(data){
+					$.messager.alert('提示', data)
+				}
+			})
+			// $('#s').click(function(e){
+			// 	e.preventDefault()
+			// 	$('#main').submit()
+			// })
+		})
+	</script>
+</body>
+</html>

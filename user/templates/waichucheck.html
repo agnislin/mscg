@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OA办公系统</title>
+	<!-- 引入JQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- 引入EasyUI -->
+    <script type="text/javascript" src="{% static 'easyui/jquery.easyui.min.js' %}"></script>
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="{% static 'easyui/locale/easyui-lang-zh_CN.js' %}"></script>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="{% static 'easyui/themes/default/easyui.css' %}" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+   	<link rel="stylesheet" href="{% static 'easyui/themes/icon.css' %}" type="text/css"/>
+   	<link rel="stylesheet" href="{% static 'css/default.css' %}" type="text/css">
+   	<script type='text/javascript' src="{% static 'js/csrf_token.js' %}"></script>
+</head>
+<body>
+	<table id='attendance_list' toolbar="#toorbar">
+	</table>
+	<div id="toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="javascript:app('pass')">通过</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="javascript:app('reject')">拒绝</a>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#attendance_list').datagrid({
+				title:'外出申请信息表', 
+				iconCls:'icon-out1',//图标 
+				border: true, 
+				collapsible:false,//是否可折叠的 
+				fit: true,//自动大小 
+				striped: true,
+				fitColumns: true,
+				idField:'id', 
+				singleSelect:false,//是否单选 
+				pagination:true,//分页控件 
+				rownumbers:true,//行号 
+				sortName:'date',
+				sortOrder:'DESC', 
+				remoteSort: false,
+				toolbar: '#toolbar',
+				columns: [[ 
+					{field: 'chk', checkbox: true, width: 80, align: 'center'},
+					{field: 'id', hidden: true},
+					{field:'date',title:'日期',width: 120, align:'center', sortable: true},
+					{field:'user_name',title:'工号',width:80, align:'center', sortable: true},
+					{field:'staff_name',title:'姓名', width: 80, align:'center', sortable: true},
+					{field:'section',title:'部门',width:80, align:'center', sortable: true},
+					{field:'position',title:'职位',width:80, align:'center'},				
+					{field:'reason',title:'外出事由',width:500, align:'center'},
+					{field:'destination',title:'目的地',width:80, align:'center'},
+					{field:'startday',title:'外出起始日期',width:120, align:'center'},
+					{field:'endday',title:'外出结束日期',width:120, align:'center'},
+					{field:'status',title:'审批情况',width:80, align:'center'},
+				]],
+				method: 'get',
+				url: '/out_approval/',
+			});
+		});
+	</script>
+	<script>
+		function app(app){
+			var ids = []
+			var rows = $('#attendance_list').datagrid('getSelections')
+			if (rows.length != 0){
+				for (var i = 0; i < rows.length; i++) {
+					ids.push(rows[i].id)
+				}
+				$.ajax({
+					url: '/out_deal/',
+					method: 'post',
+					data: {ids: ids.join(' '), app: app},
+					success: function(data){
+						alert(data)
+						location.href = "{% url 'out_approval_show' %}";
+					}
+				})
+			}else{
+				$.messager.alert('提示', '未选中数据')
+			}
+
+		}
+	</script>
+</body>
+</html>

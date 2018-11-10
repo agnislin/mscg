@@ -1,0 +1,48 @@
+body,h1,div{
+	margin: 0;
+}
+h1{
+	height: 60px;
+	text-align: center;
+	color: #1B9DFF;
+}
+div{
+	position: relative;
+	width: 700px;
+	height: 445px;
+	top: 50%;
+ 	left: 50%;
+ 	margin: 220px 0 0 -350px;
+}
+a{
+	color: gray;
+	font-size: 20px;
+	text-decoration: none;
+}
+a:hover{
+	color: #1B9DFF;
+	text-decoration: underline;
+}
+p{
+	margin: 20px 155px;
+}
+.p1{
+	width: 390px;
+	height: 40px;
+}
+.p2{
+	height: 40px; 
+}
+canvas{
+	position: absolute;
+	right: 180px;
+	width: 120px;
+	height: 40px;
+}
+#login{
+	width: 390px;
+	height: 40px;
+	background-color: #1B9DFF;
+	color: white;
+	border: 0;
+}
